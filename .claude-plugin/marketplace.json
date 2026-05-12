@@ -7,5 +7,13 @@
     "version": "1.0.0",
     "description": "Central registry for agent plugins (MCPs, skills, commands, hooks)."
   },
-  "plugins": []
+  "plugins": [
+    {
+      "name": "agent-vdesktop",
+      "description": "Microsoft Virtual Desktop management for Claude Code (native Windows + WSL). Create/delete/switch desktops, apply layouts (presets and custom percent splits, multi-monitor), launch Chrome/Terminal/VSCode into layout slots, pin apps across desktops.",
+      "source": "Seretos/agent-vdesktop",
+      "category": "mcp",
+      "version": "0.0.1"
+    }
+  ]
 }
