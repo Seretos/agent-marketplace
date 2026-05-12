@@ -29,6 +29,17 @@
       },
       "category": "mcp",
       "version": "0.0.1"
+    },
+    {
+      "name": "agent-vdesktop-skill",
+      "description": "Skill teaching Claude how to drive the agent-vdesktop MCP server: create/manage Windows Virtual Desktops, apply layouts (presets and custom percent splits, multi-monitor), launch Chrome / Windows Terminal / VS Code into layout slots, pin apps across desktops.",
+      "source": {
+        "source": "github",
+        "repo": "Seretos/agent-vdesktop-skill",
+        "ref": "v0.0.1"
+      },
+      "category": "skill",
+      "version": "0.0.1"
     }
   ]
 }
