@@ -86,7 +86,7 @@ jobs:
           **Plugin:** \`${PLUGIN_NAME}\`
           **Version:** \`${PLUGIN_VERSION}\`
 
-          Review \`.claude-plugin/marketplace.json\` and merge to publish to the registry. The tag \`${PLUGIN_NAME}--v${PLUGIN_VERSION}\` will be set automatically on merge." \
+          Review \`.claude-plugin/marketplace.json\` and merge to publish the entry to the registry." \
               --base main \
               --head "$BRANCH"
           fi
