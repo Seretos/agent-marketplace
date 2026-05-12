@@ -72,14 +72,21 @@ jobs:
             exit 0
           fi
           git commit -m "chore: update ${PLUGIN_NAME} to v${PLUGIN_VERSION}"
-          git push origin "$BRANCH"
-          gh pr create \
-            --title "plugin: ${PLUGIN_NAME} v${PLUGIN_VERSION}" \
-            --body "Automated registry update triggered by \`${PLUGIN_NAME}\` release pipeline.
+          # Idempotent: force-push overwrites a stale branch from a previous
+          # run for the same version (e.g. when the workflow was re-triggered).
+          git push --force origin "$BRANCH"
+          # PR may also already exist for that branch — only create if missing.
+          if gh pr view "$BRANCH" --repo "${{ github.repository }}" >/dev/null 2>&1; then
+            echo "PR for $BRANCH already exists — leaving it open."
+          else
+            gh pr create \
+              --title "plugin: ${PLUGIN_NAME} v${PLUGIN_VERSION}" \
+              --body "Automated registry update triggered by \`${PLUGIN_NAME}\` release pipeline.
 
           **Plugin:** \`${PLUGIN_NAME}\`
           **Version:** \`${PLUGIN_VERSION}\`
 
           Review \`.claude-plugin/marketplace.json\` and merge to publish to the registry. The tag \`${PLUGIN_NAME}--v${PLUGIN_VERSION}\` will be set automatically on merge." \
-            --base main \
-            --head "$BRANCH"
+              --base main \
+              --head "$BRANCH"
+          fi
