@@ -17,7 +17,8 @@ jobs:
         env:
           PLUGIN_NAME:     ${{ github.event.client_payload.name }}
           PLUGIN_VERSION:  ${{ github.event.client_payload.version }}
-          PLUGIN_SOURCE:   ${{ github.event.client_payload.source }}
+          PLUGIN_REPO:     ${{ github.event.client_payload.repo }}
+          PLUGIN_REF:      ${{ github.event.client_payload.ref }}
           PLUGIN_CATEGORY: ${{ github.event.client_payload.category }}
           PLUGIN_DESC:     ${{ github.event.client_payload.description }}
         run: |
@@ -26,13 +27,22 @@ jobs:
           path = ".claude-plugin/marketplace.json"
           with open(path) as f:
               data = json.load(f)
-          name = os.environ["PLUGIN_NAME"]
+          name    = os.environ["PLUGIN_NAME"]
+          version = os.environ["PLUGIN_VERSION"]
+          # ref defaults to v{version} (the tag the plugin's release.yml created),
+          # but the dispatcher may override it (e.g. "release" branch HEAD for
+          # rolling installs, or a SHA for pinned-by-commit installs).
+          ref = os.environ.get("PLUGIN_REF") or f"v{version}"
           entry = {
               "name":        name,
               "description": os.environ["PLUGIN_DESC"],
-              "source":      os.environ["PLUGIN_SOURCE"],
-              "category":    os.environ["PLUGIN_CATEGORY"],
-              "version":     os.environ["PLUGIN_VERSION"],
+              "source": {
+                  "source": "github",
+                  "repo":   os.environ["PLUGIN_REPO"],
+                  "ref":    ref,
+              },
+              "category": os.environ["PLUGIN_CATEGORY"],
+              "version":  version,
           }
           plugins = data.setdefault("plugins", [])
           for i, p in enumerate(plugins):
