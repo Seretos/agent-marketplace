@@ -18,6 +18,17 @@
       },
       "category": "mcp",
       "version": "0.0.3"
+    },
+    {
+      "name": "agent-project-issues",
+      "description": "MCP server for GitHub/GitLab issue management. Read/create/update tickets and add comments with automatic safety markers (ai-generated / ai-modified labels, #ai-generated comment prefix). Per-project permissions; falls back to read-only auto-discovery from the git remote when no config is present.",
+      "source": {
+        "source": "github",
+        "repo": "Seretos/agent-project-issues",
+        "ref": "v0.0.1"
+      },
+      "category": "mcp",
+      "version": "0.0.1"
     }
   ]
 }
