@@ -1,0 +1,11 @@
+{
+  "name": "agent-marketplace",
+  "owner": {
+    "name": "Arne von Appen"
+  },
+  "metadata": {
+    "version": "1.0.0",
+    "description": "Central registry for agent plugins (MCPs, skills, commands, hooks)."
+  },
+  "plugins": []
+}

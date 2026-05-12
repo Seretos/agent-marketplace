@@ -1,0 +1,75 @@
+name: update-registry
+
+on:
+  repository_dispatch:
+    types: [plugin-release]
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Update marketplace.json
+        env:
+          PLUGIN_NAME:     ${{ github.event.client_payload.name }}
+          PLUGIN_VERSION:  ${{ github.event.client_payload.version }}
+          PLUGIN_SOURCE:   ${{ github.event.client_payload.source }}
+          PLUGIN_CATEGORY: ${{ github.event.client_payload.category }}
+          PLUGIN_DESC:     ${{ github.event.client_payload.description }}
+        run: |
+          python3 - <<'EOF'
+          import json, os
+          path = ".claude-plugin/marketplace.json"
+          with open(path) as f:
+              data = json.load(f)
+          name = os.environ["PLUGIN_NAME"]
+          entry = {
+              "name":        name,
+              "description": os.environ["PLUGIN_DESC"],
+              "source":      os.environ["PLUGIN_SOURCE"],
+              "category":    os.environ["PLUGIN_CATEGORY"],
+              "version":     os.environ["PLUGIN_VERSION"],
+          }
+          plugins = data.setdefault("plugins", [])
+          for i, p in enumerate(plugins):
+              if p["name"] == name:
+                  plugins[i] = entry
+                  break
+          else:
+              plugins.append(entry)
+          with open(path, "w") as f:
+              json.dump(data, f, indent=2)
+              f.write("\n")
+          EOF
+
+      - name: Commit to feature branch and open PR
+        env:
+          GH_TOKEN:       ${{ secrets.GITHUB_TOKEN }}
+          PLUGIN_NAME:    ${{ github.event.client_payload.name }}
+          PLUGIN_VERSION: ${{ github.event.client_payload.version }}
+        run: |
+          BRANCH="plugin-update/${PLUGIN_NAME}-v${PLUGIN_VERSION}"
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$BRANCH"
+          git add .claude-plugin/marketplace.json
+          if git diff --cached --quiet; then
+            echo "No changes, skipping PR"
+            exit 0
+          fi
+          git commit -m "chore: update ${PLUGIN_NAME} to v${PLUGIN_VERSION}"
+          git push origin "$BRANCH"
+          gh pr create \
+            --title "plugin: ${PLUGIN_NAME} v${PLUGIN_VERSION}" \
+            --body "Automated registry update triggered by \`${PLUGIN_NAME}\` release pipeline.
+
+          **Plugin:** \`${PLUGIN_NAME}\`
+          **Version:** \`${PLUGIN_VERSION}\`
+
+          Review \`.claude-plugin/marketplace.json\` and merge to publish to the registry. The tag \`${PLUGIN_NAME}--v${PLUGIN_VERSION}\` will be set automatically on merge." \
+            --base main \
+            --head "$BRANCH"
