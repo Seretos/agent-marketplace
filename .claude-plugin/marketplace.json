@@ -40,6 +40,17 @@
       },
       "category": "skill",
       "version": "0.0.4"
+    },
+    {
+      "name": "agent-worktree",
+      "description": "MCP server for git worktree lifecycle management. Create/list/remove worktrees with branch handling, run per-project setup scripts on creation, and detect uncommitted changes before destructive operations.",
+      "source": {
+        "source": "github",
+        "repo": "Seretos/agent-worktree",
+        "ref": "agent-worktree--v0.0.2"
+      },
+      "category": "mcp",
+      "version": "0.0.2"
     }
   ]
 }
