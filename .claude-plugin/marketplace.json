@@ -25,10 +25,10 @@
       "source": {
         "source": "github",
         "repo": "Seretos/agent-project-issues",
-        "ref": "agent-project-issues--v0.0.8"
+        "ref": "agent-project-issues--v0.0.9"
       },
       "category": "mcp",
-      "version": "0.0.8"
+      "version": "0.0.9"
     },
     {
       "name": "agent-vdesktop-skill",
