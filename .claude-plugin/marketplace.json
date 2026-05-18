@@ -47,10 +47,10 @@
       "source": {
         "source": "github",
         "repo": "Seretos/agent-worktree",
-        "ref": "agent-worktree--v0.0.2"
+        "ref": "agent-worktree--v0.0.4"
       },
       "category": "mcp",
-      "version": "0.0.2"
+      "version": "0.0.4"
     }
   ]
 }
