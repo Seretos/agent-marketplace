@@ -19,7 +19,7 @@ That's it. The agent fetches the plugin from its own repo at the version pinned 
 
 ## What's inside
 
-The full list of plugins is in [`.claude-plugin/marketplace.json`](.claude-plugin/marketplace.json). Each entry points at its own repository, where the plugin's own README explains what it does and how to use it.
+The full list of plugins is in [`.claude-plugin/marketplace.json`](.claude-plugin/marketplace.json) (Claude Code) and [`.agents/plugins/marketplace.json`](.agents/plugins/marketplace.json) (Codex). Both registries describe the same plugins in the format each host expects — release-pipeline CI keeps them in sync. Each entry points at its own repository, where the plugin's own README explains what it does and how to use it.
 
 ## Alternative installs
 

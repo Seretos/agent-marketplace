@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Update marketplace.json
+      - name: Update marketplace registries (Claude + Codex)
         env:
           PLUGIN_NAME:     ${{ github.event.client_payload.name }}
           PLUGIN_VERSION:  ${{ github.event.client_payload.version }}
@@ -24,35 +24,60 @@ jobs:
         run: |
           python3 - <<'EOF'
           import json, os
-          path = ".claude-plugin/marketplace.json"
-          with open(path) as f:
-              data = json.load(f)
-          name    = os.environ["PLUGIN_NAME"]
-          version = os.environ["PLUGIN_VERSION"]
+
+          name     = os.environ["PLUGIN_NAME"]
+          version  = os.environ["PLUGIN_VERSION"]
+          repo     = os.environ["PLUGIN_REPO"]
           # ref defaults to v{version} (the tag the plugin's release.yml created),
           # but the dispatcher may override it (e.g. "release" branch HEAD for
           # rolling installs, or a SHA for pinned-by-commit installs).
-          ref = os.environ.get("PLUGIN_REF") or f"v{version}"
-          entry = {
+          ref      = os.environ.get("PLUGIN_REF") or f"v{version}"
+          category = os.environ["PLUGIN_CATEGORY"]
+          desc     = os.environ["PLUGIN_DESC"]
+
+          def upsert(plugins, name, entry):
+              for i, p in enumerate(plugins):
+                  if p["name"] == name:
+                      plugins[i] = entry
+                      return
+              plugins.append(entry)
+
+          # Claude registry: source.source = "github", repo + ref.
+          claude_path = ".claude-plugin/marketplace.json"
+          with open(claude_path) as f:
+              claude_data = json.load(f)
+          claude_entry = {
               "name":        name,
-              "description": os.environ["PLUGIN_DESC"],
+              "description": desc,
+              "source":      {"source": "github", "repo": repo, "ref": ref},
+              "category":    category,
+              "version":     version,
+          }
+          upsert(claude_data.setdefault("plugins", []), name, claude_entry)
+          with open(claude_path, "w") as f:
+              json.dump(claude_data, f, indent=2)
+              f.write("\n")
+
+          # Codex registry: source.source = "url", url + ref (plugin at repo root).
+          # Categories and policies don't map 1:1 from the dispatch payload, so
+          # default to Productivity / AVAILABLE / ON_INSTALL. Maintainers can
+          # hand-edit either field in a follow-up PR if they need to override.
+          codex_path = ".agents/plugins/marketplace.json"
+          with open(codex_path) as f:
+              codex_data = json.load(f)
+          codex_entry = {
+              "name": name,
               "source": {
-                  "source": "github",
-                  "repo":   os.environ["PLUGIN_REPO"],
+                  "source": "url",
+                  "url":    f"https://github.com/{repo}.git",
                   "ref":    ref,
               },
-              "category": os.environ["PLUGIN_CATEGORY"],
-              "version":  version,
+              "policy":   {"installation": "AVAILABLE", "authentication": "ON_INSTALL"},
+              "category": "Productivity",
           }
-          plugins = data.setdefault("plugins", [])
-          for i, p in enumerate(plugins):
-              if p["name"] == name:
-                  plugins[i] = entry
-                  break
-          else:
-              plugins.append(entry)
-          with open(path, "w") as f:
-              json.dump(data, f, indent=2)
+          upsert(codex_data.setdefault("plugins", []), name, codex_entry)
+          with open(codex_path, "w") as f:
+              json.dump(codex_data, f, indent=2)
               f.write("\n")
           EOF
 
@@ -66,7 +91,7 @@ jobs:
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git checkout -b "$BRANCH"
-          git add .claude-plugin/marketplace.json
+          git add .claude-plugin/marketplace.json .agents/plugins/marketplace.json
           if git diff --cached --quiet; then
             echo "No changes, skipping PR"
             exit 0
