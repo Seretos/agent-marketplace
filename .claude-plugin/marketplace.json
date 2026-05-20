@@ -14,10 +14,10 @@
       "source": {
         "source": "github",
         "repo": "Seretos/agent-vdesktop",
-        "ref": "agent-vdesktop--v0.0.6"
+        "ref": "agent-vdesktop--v0.0.7"
       },
       "category": "mcp",
-      "version": "0.0.6"
+      "version": "0.0.7"
     },
     {
       "name": "agent-project-issues",
