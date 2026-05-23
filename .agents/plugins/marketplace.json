@@ -55,6 +55,19 @@
         "authentication": "ON_INSTALL"
       },
       "category": "Productivity"
+    },
+    {
+      "name": "agent-python-developer-ticket-workflow",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/Seretos/agent-python-developer-ticket-workflow.git",
+        "ref": "agent-python-developer-ticket-workflow--v0.0.1"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
     }
   ]
 }

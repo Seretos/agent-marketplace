@@ -51,6 +51,17 @@
       },
       "category": "mcp",
       "version": "0.0.7"
+    },
+    {
+      "name": "agent-python-developer-ticket-workflow",
+      "description": "Turns agent-project-issues tickets into draft pull requests for Python projects. Ships two skills \u2014 orchestrate-tickets (dispatches conflict-free parallel ticket work across git worktrees and launches one background Claude session per ticket) and process-ticket (an end-to-end context\u2192plan\u2192code\u2192review\u2192PR pipeline) \u2014 backed by five subagents. Drives the agent-project-issues and agent-worktree MCPs.",
+      "source": {
+        "source": "github",
+        "repo": "Seretos/agent-python-developer-ticket-workflow",
+        "ref": "agent-python-developer-ticket-workflow--v0.0.1"
+      },
+      "category": "skill",
+      "version": "0.0.1"
     }
   ]
 }
