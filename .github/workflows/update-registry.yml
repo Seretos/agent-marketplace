@@ -21,6 +21,9 @@ jobs:
           PLUGIN_REF:      ${{ github.event.client_payload.ref }}
           PLUGIN_CATEGORY: ${{ github.event.client_payload.category }}
           PLUGIN_DESC:     ${{ github.event.client_payload.description }}
+          # Optional. Plugins adopt this gradually; an empty value carries the
+          # existing registry icon forward instead of wiping it (see below).
+          PLUGIN_ICON:     ${{ github.event.client_payload.icon }}
         run: |
           python3 - <<'EOF'
           import json, os
@@ -34,6 +37,15 @@ jobs:
           ref      = os.environ.get("PLUGIN_REF") or f"v{version}"
           category = os.environ["PLUGIN_CATEGORY"]
           desc     = os.environ["PLUGIN_DESC"]
+          # Optional, plugin-side opt-in. Consumed only by our own catalog page;
+          # Claude Code and Codex ignore unrecognized fields.
+          icon     = (os.environ.get("PLUGIN_ICON") or "").strip()
+
+          def find(plugins, name):
+              for p in plugins:
+                  if p["name"] == name:
+                      return p
+              return None
 
           def upsert(plugins, name, entry):
               for i, p in enumerate(plugins):
@@ -46,6 +58,7 @@ jobs:
           claude_path = ".claude-plugin/marketplace.json"
           with open(claude_path) as f:
               claude_data = json.load(f)
+          claude_plugins = claude_data.setdefault("plugins", [])
           claude_entry = {
               "name":        name,
               "description": desc,
@@ -53,7 +66,17 @@ jobs:
               "category":    category,
               "version":     version,
           }
-          upsert(claude_data.setdefault("plugins", []), name, claude_entry)
+          # Backwards-compatible icon handling: a payload icon wins; if the
+          # payload omits one (plugin hasn't adopted icons yet), preserve any
+          # icon already in the registry rather than dropping it on re-release.
+          # The key is omitted entirely when there is no icon, so existing
+          # entries stay byte-for-byte unchanged.
+          existing = find(claude_plugins, name)
+          if not icon and existing:
+              icon = (existing.get("icon") or "").strip()
+          if icon:
+              claude_entry["icon"] = icon
+          upsert(claude_plugins, name, claude_entry)
           with open(claude_path, "w") as f:
               json.dump(claude_data, f, indent=2)
               f.write("\n")

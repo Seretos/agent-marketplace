@@ -37,13 +37,25 @@ Each plugin entry uses Claude Code's **object** source format:
 
 Top-level required fields: `name`, `owner` (with `owner.name`), `plugins` (array). `metadata.version` / `metadata.description` are optional.
 
+### `icon` (optional, our own field)
+
+`icon` is **not** part of Claude Code's documented plugin-entry schema — Claude Code and Codex silently ignore unrecognized fields, so it renders nowhere in either host's `/plugin` UI. It exists purely for **our own catalog page**, which reads `.claude-plugin/marketplace.json` and renders icons itself. Value is an opaque string the plugin chooses; recommended either a full `https://…` image URL or a path resolvable against the plugin's repo (e.g. `assets/icon.svg`).
+
+It is **optional and rolled out gradually** — plugins adopt it one at a time. The dispatcher therefore:
+
+- omits the `icon` key entirely when no icon is known (existing entries stay byte-for-byte unchanged), and
+- **preserves** an icon already in the registry when a later release dispatches *without* one — a re-release from a not-yet-updated `release.yml` never wipes an icon. A non-empty payload icon always wins.
+
+It is added **only to the Claude registry**, not `.agents/plugins/marketplace.json`, since the Codex parser's tolerance for unknown fields is unverified and the catalog reads the Claude file anyway.
+
 ## How entries get added
 
 ```
 plugin repo (e.g. agent-vdesktop)
   release.yml after a successful build:
     POST /repos/Seretos/agent-marketplace/dispatches
-    client_payload: { name, repo, version, category, description }
+    client_payload: { name, repo, version, category, description, icon? }
+      icon is optional — omit it until the plugin has one
 
 this repo, update-registry.yml triggered by repository_dispatch:
   1. patches .claude-plugin/marketplace.json (upsert by plugin name)
@@ -59,7 +71,9 @@ Manual PRs against `.claude-plugin/marketplace.json` are equally valid for hand-
 
 ## Cross-repo coupling
 
-When the marketplace.json schema or dispatch payload changes, **every** plugin repo's `release.yml` and `dispatch.yml` need a matching update — the payload contract (`name`, `repo`, `version`, `category`, `description`) is shared. The plugin sends raw fields; this repo synthesizes the `source` object.
+When the marketplace.json schema or dispatch payload changes, **every** plugin repo's `release.yml` and `dispatch.yml` need a matching update — the payload contract (`name`, `repo`, `version`, `category`, `description`, optional `icon`) is shared. The plugin sends raw fields; this repo synthesizes the `source` object.
+
+`icon` is the one **optional** field in the contract: a plugin that doesn't send it loses nothing (the dispatcher preserves any existing icon), so plugins can be migrated one at a time without coordinating a flag-day update across all repos.
 
 ## Things that turned out NOT to be needed
 
