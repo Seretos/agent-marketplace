@@ -58,10 +58,10 @@
       "source": {
         "source": "github",
         "repo": "Seretos/agent-python-developer-ticket-workflow",
-        "ref": "agent-python-developer-ticket-workflow--v0.0.2"
+        "ref": "agent-python-developer-ticket-workflow--v0.0.3"
       },
       "category": "skill",
-      "version": "0.0.2"
+      "version": "0.0.3"
     }
   ]
 }
