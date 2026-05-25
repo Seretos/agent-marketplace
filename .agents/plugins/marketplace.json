@@ -61,7 +61,7 @@
       "source": {
         "source": "url",
         "url": "https://github.com/Seretos/agent-python-developer-ticket-workflow.git",
-        "ref": "agent-python-developer-ticket-workflow--v0.0.2"
+        "ref": "agent-python-developer-ticket-workflow--v0.0.3"
       },
       "policy": {
         "installation": "AVAILABLE",
