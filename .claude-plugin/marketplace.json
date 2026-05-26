@@ -64,6 +64,17 @@
       "category": "skill",
       "version": "0.0.4",
       "icon": "https://raw.githubusercontent.com/Seretos/agent-python-developer-ticket-workflow/agent-python-developer-ticket-workflow--v0.0.4/assets/icon.png"
+    },
+    {
+      "name": "agent-mcp-tester",
+      "description": "E2E-tests MCP servers: LLM-driven sweeps that record repeatable test suites, plus a deterministic runner that replays them with zero LLM tokens.",
+      "source": {
+        "source": "github",
+        "repo": "Seretos/agent-mcp-tester",
+        "ref": "agent-mcp-tester--v0.0.2"
+      },
+      "category": "mcp",
+      "version": "0.0.2"
     }
   ]
 }

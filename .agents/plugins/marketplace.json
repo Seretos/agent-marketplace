@@ -68,6 +68,19 @@
         "authentication": "ON_INSTALL"
       },
       "category": "Productivity"
+    },
+    {
+      "name": "agent-mcp-tester",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/Seretos/agent-mcp-tester.git",
+        "ref": "agent-mcp-tester--v0.0.2"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
     }
   ]
 }
