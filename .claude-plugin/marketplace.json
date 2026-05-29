@@ -60,11 +60,11 @@
       "source": {
         "source": "github",
         "repo": "Seretos/agent-python-developer-ticket-workflow",
-        "ref": "agent-python-developer-ticket-workflow--v0.0.4"
+        "ref": "agent-python-developer-ticket-workflow--v0.0.5"
       },
       "category": "skill",
-      "version": "0.0.4",
-      "icon": "https://raw.githubusercontent.com/Seretos/agent-python-developer-ticket-workflow/agent-python-developer-ticket-workflow--v0.0.4/assets/icon.png"
+      "version": "0.0.5",
+      "icon": "https://raw.githubusercontent.com/Seretos/agent-python-developer-ticket-workflow/agent-python-developer-ticket-workflow--v0.0.5/assets/icon.png"
     },
     {
       "name": "agent-mcp-tester",
