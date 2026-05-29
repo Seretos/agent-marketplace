@@ -84,11 +84,11 @@
       "source": {
         "source": "github",
         "repo": "Seretos/agent-ecosystem-ticket-router",
-        "ref": "agent-ecosystem-ticket-router--v0.0.2"
+        "ref": "agent-ecosystem-ticket-router--v0.0.3"
       },
       "category": "skill",
-      "version": "0.0.2",
-      "icon": "https://raw.githubusercontent.com/Seretos/agent-ecosystem-ticket-router/agent-ecosystem-ticket-router--v0.0.2/assets/icon.png"
+      "version": "0.0.3",
+      "icon": "https://raw.githubusercontent.com/Seretos/agent-ecosystem-ticket-router/agent-ecosystem-ticket-router--v0.0.3/assets/icon.png"
     }
   ]
 }
