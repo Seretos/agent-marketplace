@@ -89,6 +89,18 @@
       "category": "skill",
       "version": "0.0.3",
       "icon": "https://raw.githubusercontent.com/Seretos/agent-ecosystem-ticket-router/agent-ecosystem-ticket-router--v0.0.3/assets/icon.png"
+    },
+    {
+      "name": "agent-serena-wrapper",
+      "description": "Pairs the external Serena MCP server with a skill so Claude works with code through token-efficient semantic operations instead of reading whole files.",
+      "source": {
+        "source": "github",
+        "repo": "Seretos/agent-serena-wrapper",
+        "ref": "agent-serena-wrapper--v0.0.1"
+      },
+      "category": "skill",
+      "version": "0.0.1",
+      "icon": "https://raw.githubusercontent.com/Seretos/agent-serena-wrapper/agent-serena-wrapper--v0.0.1/assets/icon.png"
     }
   ]
 }
