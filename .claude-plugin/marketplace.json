@@ -96,11 +96,11 @@
       "source": {
         "source": "github",
         "repo": "Seretos/agent-serena-wrapper",
-        "ref": "agent-serena-wrapper--v0.0.1"
+        "ref": "agent-serena-wrapper--v0.0.2"
       },
       "category": "skill",
-      "version": "0.0.1",
-      "icon": "https://raw.githubusercontent.com/Seretos/agent-serena-wrapper/agent-serena-wrapper--v0.0.1/assets/icon.png"
+      "version": "0.0.2",
+      "icon": "https://raw.githubusercontent.com/Seretos/agent-serena-wrapper/agent-serena-wrapper--v0.0.2/assets/icon.png"
     }
   ]
 }
