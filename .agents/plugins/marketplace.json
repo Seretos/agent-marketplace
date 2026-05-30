@@ -74,7 +74,7 @@
       "source": {
         "source": "url",
         "url": "https://github.com/Seretos/agent-mcp-tester.git",
-        "ref": "agent-mcp-tester--v0.0.8"
+        "ref": "agent-mcp-tester--v0.0.9"
       },
       "policy": {
         "installation": "AVAILABLE",
