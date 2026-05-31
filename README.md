@@ -49,6 +49,10 @@ For a one-off install of a specific version without touching the marketplace:
 
 (Claude Code accepts a `owner/repo@ref` shorthand for ad-hoc installs.)
 
+## Apps
+
+Besides plugins, the marketplace also tracks downloadable **apps** in a separate registry, [`app-marketplace.json`](app-marketplace.json) (project root). App entries carry per-platform download links (`downloads`: `windows` / `macos` / `linux`) instead of a git `source`. Apps are registered via their own `app-release` dispatch handled by `update-app-registry.yml`.
+
 ## How plugins get added
 
 Plugin repos publish via GitHub `repository_dispatch` → CI opens a PR against this repo → I review and merge → the registry entry is live. Hand-curated PRs are also welcome.
