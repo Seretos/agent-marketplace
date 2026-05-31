@@ -24,6 +24,11 @@ jobs:
           # Optional. Plugins adopt this gradually; an empty value carries the
           # existing registry icon forward instead of wiping it (see below).
           PLUGIN_ICON:     ${{ github.event.client_payload.icon }}
+          # Optional, same gradual-rollout / preserve semantics as icon.
+          # description_url: raw link to a longer description.md.
+          # tags: a JSON string array, e.g. ["mcp","windows"].
+          PLUGIN_DESCRIPTION_URL: ${{ github.event.client_payload.description_url }}
+          PLUGIN_TAGS:            ${{ github.event.client_payload.tags }}
         run: |
           python3 - <<'EOF'
           import json, os
@@ -40,6 +45,10 @@ jobs:
           # Optional, plugin-side opt-in. Consumed only by our own catalog page;
           # Claude Code and Codex ignore unrecognized fields.
           icon     = (os.environ.get("PLUGIN_ICON") or "").strip()
+          # Same optional / preserve semantics as icon (see below).
+          description_url = (os.environ.get("PLUGIN_DESCRIPTION_URL") or "").strip()
+          raw_tags = (os.environ.get("PLUGIN_TAGS") or "").strip()
+          tags     = json.loads(raw_tags) if raw_tags else []
 
           def find(plugins, name):
               for p in plugins:
@@ -76,6 +85,18 @@ jobs:
               icon = (existing.get("icon") or "").strip()
           if icon:
               claude_entry["icon"] = icon
+          # description_url and tags follow the exact same backwards-compatible
+          # rule as icon: a non-empty payload value wins, an omitted value
+          # preserves whatever is already in the registry, and the key is left
+          # out entirely when there is nothing to write.
+          if not description_url and existing:
+              description_url = (existing.get("description_url") or "").strip()
+          if description_url:
+              claude_entry["description_url"] = description_url
+          if not tags and existing:
+              tags = existing.get("tags") or []
+          if tags:
+              claude_entry["tags"] = tags
           upsert(claude_plugins, name, claude_entry)
           with open(claude_path, "w") as f:
               json.dump(claude_data, f, indent=2)

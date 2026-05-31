@@ -5,9 +5,11 @@ The plugin registry for the agent-plugins ecosystem. Metadata only — no plugin
 ## Layout
 
 ```
-.claude-plugin/marketplace.json   # the registry, single source of truth
+.claude-plugin/marketplace.json   # the plugin registry, single source of truth
+app-marketplace.json              # the app registry (downloadable apps), project root
 .github/workflows/
   update-registry.yml             # processes plugin-release dispatches
+  update-app-registry.yml         # processes app-release dispatches
 README.md                         # user-facing
 AGENTS.md                         # this file
 .gitignore
@@ -48,14 +50,22 @@ It is **optional and rolled out gradually** — plugins adopt it one at a time. 
 
 It is added **only to the Claude registry**, not `.agents/plugins/marketplace.json`, since the Codex parser's tolerance for unknown fields is unverified and the catalog reads the Claude file anyway.
 
+### `description_url` and `tags` (optional, our own fields)
+
+Two more optional, catalog-only fields that follow the **exact same rules as `icon`** (gradual rollout, preserve-on-omit, Claude registry only, ignored by Claude Code / Codex):
+
+- `description_url` — a raw link to a longer-form `description.md` shipped on the plugin's `release` branch at the tagged commit (e.g. `https://raw.githubusercontent.com/${repo}/${ref}/description.md`). The field name is the same in the payload and the registry.
+- `tags` — a JSON string array (e.g. `["mcp","windows"]`). The dispatch payload carries it as a JSON-encoded string; the dispatcher parses it and stores a real array. An empty/omitted value leaves the key out and preserves any existing tags.
+
 ## How entries get added
 
 ```
 plugin repo (e.g. agent-vdesktop)
   release.yml after a successful build:
     POST /repos/Seretos/agent-marketplace/dispatches
-    client_payload: { name, repo, version, category, description, icon? }
-      icon is optional — omit it until the plugin has one
+    client_payload: { name, repo, version, category, description, icon?, description_url?, tags? }
+      icon / description_url / tags are optional — omit them until the plugin has them
+      (tags is a JSON string array, e.g. ["mcp","windows"])
 
 this repo, update-registry.yml triggered by repository_dispatch:
   1. patches .claude-plugin/marketplace.json (upsert by plugin name)
@@ -69,11 +79,50 @@ human review + merge → entry is live
 
 Manual PRs against `.claude-plugin/marketplace.json` are equally valid for hand-curated entries.
 
+## app-marketplace.json schema
+
+`app-marketplace.json` lives in the **project root** (not under `.claude-plugin/`) and is a separate registry for downloadable **apps**. It is structurally analogous to the plugin registry — same top-level `name` / `owner` / `metadata` — but holds an `apps` array, and app entries differ from plugins in two ways:
+
+```json
+{
+  "name": "agent-some-app",
+  "description": "...",
+  "category": "...",
+  "version": "0.1.0",
+  "downloads": {
+    "windows": "https://.../app-setup.exe",
+    "macos":   "https://.../app.dmg",
+    "linux":   "https://.../app.AppImage"
+  }
+}
+```
+
+- **No `source`.** Apps are not installed via a git source. Instead they carry `downloads`, a map of `platform -> url`. Only the platforms an app ships for are present.
+- `description_url` and `icon` are the same optional, catalog-only fields as on plugins (preserve-on-omit, JSON-ignored by hosts).
+
+## How apps get added
+
+```
+app repo
+  release.yml after a successful build:
+    POST /repos/Seretos/agent-marketplace/dispatches
+    event_type: app-release
+    client_payload: { name, repo, version, category, description, downloads, icon?, description_url? }
+      downloads is a JSON object: { "windows": url, "macos": url, "linux": url }
+
+this repo, update-app-registry.yml triggered by repository_dispatch:
+  1. patches app-marketplace.json (upsert by app name)
+  2. force-pushes branch  app-update/{name}-v{version}
+  3. opens PR if one isn't already open
+```
+
+The app flow is deliberately separate from the plugin flow (own `event_type`, own workflow, own registry file) so the two never interfere. There is no Codex app registry.
+
 ## Cross-repo coupling
 
-When the marketplace.json schema or dispatch payload changes, **every** plugin repo's `release.yml` and `dispatch.yml` need a matching update — the payload contract (`name`, `repo`, `version`, `category`, `description`, optional `icon`) is shared. The plugin sends raw fields; this repo synthesizes the `source` object.
+When the marketplace.json schema or dispatch payload changes, **every** plugin repo's `release.yml` and `dispatch.yml` need a matching update — the payload contract (`name`, `repo`, `version`, `category`, `description`, optional `icon`, `description_url`, `tags`) is shared. The plugin sends raw fields; this repo synthesizes the `source` object.
 
-`icon` is the one **optional** field in the contract: a plugin that doesn't send it loses nothing (the dispatcher preserves any existing icon), so plugins can be migrated one at a time without coordinating a flag-day update across all repos.
+`icon`, `description_url` and `tags` are the **optional** fields in the contract: a plugin that doesn't send one loses nothing (the dispatcher preserves any existing value), so plugins can be migrated one at a time without coordinating a flag-day update across all repos.
 
 ## Things that turned out NOT to be needed
 

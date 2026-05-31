@@ -1,0 +1,132 @@
+name: update-app-registry
+
+on:
+  repository_dispatch:
+    types: [app-release]
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Update app registry
+        env:
+          APP_NAME:     ${{ github.event.client_payload.name }}
+          APP_VERSION:  ${{ github.event.client_payload.version }}
+          APP_REPO:     ${{ github.event.client_payload.repo }}
+          APP_REF:      ${{ github.event.client_payload.ref }}
+          APP_CATEGORY: ${{ github.event.client_payload.category }}
+          APP_DESC:     ${{ github.event.client_payload.description }}
+          # downloads: a JSON object mapping platform -> download URL,
+          # e.g. {"windows":"...","macos":"...","linux":"..."}.
+          APP_DOWNLOADS: ${{ github.event.client_payload.downloads }}
+          # Optional, same gradual-rollout / preserve semantics as the plugin
+          # registry's icon field (see AGENTS.md).
+          APP_ICON:            ${{ github.event.client_payload.icon }}
+          APP_DESCRIPTION_URL: ${{ github.event.client_payload.description_url }}
+        run: |
+          python3 - <<'EOF'
+          import json, os
+
+          name     = os.environ["APP_NAME"]
+          version  = os.environ["APP_VERSION"]
+          repo     = os.environ["APP_REPO"]
+          # ref defaults to v{version} (the tag the app's release.yml created),
+          # but the dispatcher may override it.
+          ref      = os.environ.get("APP_REF") or f"v{version}"
+          category = os.environ["APP_CATEGORY"]
+          desc     = os.environ["APP_DESC"]
+          # downloads is the app analogue of the plugin source object: a map of
+          # platform -> url. Apps have no install "source"; the catalog offers
+          # these links directly.
+          raw_downloads = (os.environ.get("APP_DOWNLOADS") or "").strip()
+          downloads = json.loads(raw_downloads) if raw_downloads else {}
+          # Optional, catalog-only. Same preserve-on-omit rule as plugins.
+          icon            = (os.environ.get("APP_ICON") or "").strip()
+          description_url = (os.environ.get("APP_DESCRIPTION_URL") or "").strip()
+
+          def find(apps, name):
+              for a in apps:
+                  if a["name"] == name:
+                      return a
+              return None
+
+          def upsert(apps, name, entry):
+              for i, a in enumerate(apps):
+                  if a["name"] == name:
+                      apps[i] = entry
+                      return
+              apps.append(entry)
+
+          app_path = "app-marketplace.json"
+          with open(app_path) as f:
+              app_data = json.load(f)
+          apps = app_data.setdefault("apps", [])
+          existing = find(apps, name)
+
+          entry = {
+              "name":        name,
+              "description": desc,
+              "category":    category,
+              "version":     version,
+          }
+          # Optional fields follow the plugin icon rule: a non-empty payload
+          # value wins, an omitted value preserves what is already in the
+          # registry, and the key is left out entirely when there is nothing.
+          if not description_url and existing:
+              description_url = (existing.get("description_url") or "").strip()
+          if description_url:
+              entry["description_url"] = description_url
+          if not icon and existing:
+              icon = (existing.get("icon") or "").strip()
+          if icon:
+              entry["icon"] = icon
+          if not downloads and existing:
+              downloads = existing.get("downloads") or {}
+          if downloads:
+              entry["downloads"] = downloads
+
+          upsert(apps, name, entry)
+          with open(app_path, "w") as f:
+              json.dump(app_data, f, indent=2)
+              f.write("\n")
+          EOF
+
+      - name: Commit to feature branch and open PR
+        env:
+          GH_TOKEN:    ${{ secrets.GITHUB_TOKEN }}
+          APP_NAME:    ${{ github.event.client_payload.name }}
+          APP_VERSION: ${{ github.event.client_payload.version }}
+        run: |
+          BRANCH="app-update/${APP_NAME}-v${APP_VERSION}"
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$BRANCH"
+          git add app-marketplace.json
+          if git diff --cached --quiet; then
+            echo "No changes, skipping PR"
+            exit 0
+          fi
+          git commit -m "chore: update app ${APP_NAME} to v${APP_VERSION}"
+          # Idempotent: force-push overwrites a stale branch from a previous
+          # run for the same version (e.g. when the workflow was re-triggered).
+          git push --force origin "$BRANCH"
+          # PR may also already exist for that branch — only create if missing.
+          if gh pr view "$BRANCH" --repo "${{ github.repository }}" >/dev/null 2>&1; then
+            echo "PR for $BRANCH already exists — leaving it open."
+          else
+            gh pr create \
+              --title "app: ${APP_NAME} v${APP_VERSION}" \
+              --body "Automated app-registry update triggered by \`${APP_NAME}\` release pipeline.
+
+          **App:** \`${APP_NAME}\`
+          **Version:** \`${APP_VERSION}\`
+
+          Review \`app-marketplace.json\` and merge to publish the entry to the registry." \
+              --base main \
+              --head "$BRANCH"
+          fi
