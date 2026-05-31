@@ -22,8 +22,13 @@ jobs:
           APP_CATEGORY: ${{ github.event.client_payload.category }}
           APP_DESC:     ${{ github.event.client_payload.description }}
           # downloads: a JSON object mapping platform -> download URL,
-          # e.g. {"windows":"...","macos":"...","linux":"..."}.
-          APP_DOWNLOADS: ${{ github.event.client_payload.downloads }}
+          # e.g. {"windows":"...","macos":"...","linux":"..."}. It is a
+          # structured value, so it MUST be wrapped in toJSON(): injecting a raw
+          # mapping into a scalar env value fails the workflow at template-compile
+          # time ("A mapping was not expected"), before any step runs. toJSON()
+          # serializes it to a JSON string the Python below parses; an omitted
+          # field becomes the literal "null".
+          APP_DOWNLOADS: ${{ toJSON(github.event.client_payload.downloads) }}
           # Optional, same gradual-rollout / preserve semantics as the plugin
           # registry's icon field (see AGENTS.md).
           APP_ICON:            ${{ github.event.client_payload.icon }}
@@ -43,8 +48,15 @@ jobs:
           # downloads is the app analogue of the plugin source object: a map of
           # platform -> url. Apps have no install "source"; the catalog offers
           # these links directly.
+          # APP_DOWNLOADS arrives as JSON text (via toJSON above): an object, the
+          # literal "null" when omitted, or — to stay tolerant of an older payload
+          # contract — a JSON-encoded string. Parse once, unwrap a double-encoded
+          # string, and keep it only if it's a mapping.
           raw_downloads = (os.environ.get("APP_DOWNLOADS") or "").strip()
-          downloads = json.loads(raw_downloads) if raw_downloads else {}
+          parsed_downloads = json.loads(raw_downloads) if raw_downloads else None
+          if isinstance(parsed_downloads, str):
+              parsed_downloads = json.loads(parsed_downloads)
+          downloads = parsed_downloads if isinstance(parsed_downloads, dict) else {}
           # Optional, catalog-only. Same preserve-on-omit rule as plugins.
           icon            = (os.environ.get("APP_ICON") or "").strip()
           description_url = (os.environ.get("APP_DESCRIPTION_URL") or "").strip()

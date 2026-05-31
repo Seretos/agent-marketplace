@@ -55,7 +55,7 @@ It is added **only to the Claude registry**, not `.agents/plugins/marketplace.js
 Two more optional, catalog-only fields that follow the **exact same rules as `icon`** (gradual rollout, preserve-on-omit, Claude registry only, ignored by Claude Code / Codex):
 
 - `description_url` — a raw link to a longer-form `description.md` shipped on the plugin's `release` branch at the tagged commit (e.g. `https://raw.githubusercontent.com/${repo}/${ref}/description.md`). The field name is the same in the payload and the registry.
-- `tags` — a JSON string array (e.g. `["mcp","windows"]`). The dispatch payload carries it as a JSON-encoded string; the dispatcher parses it and stores a real array. An empty/omitted value leaves the key out and preserves any existing tags.
+- `tags` — a JSON array of strings (e.g. `["mcp","windows"]`). The dispatch payload carries it as a real JSON array; because it is a structured (non-scalar) value, the dispatcher reads it through `toJSON(...)` before parsing — passing it to a scalar env value directly fails the workflow at template-compile time (`A sequence was not expected`). The dispatcher also tolerates a legacy JSON-encoded **string** form. An empty/omitted value leaves the key out and preserves any existing tags.
 
 ## How entries get added
 
@@ -65,7 +65,7 @@ plugin repo (e.g. agent-vdesktop)
     POST /repos/Seretos/agent-marketplace/dispatches
     client_payload: { name, repo, version, category, description, icon?, description_url?, tags? }
       icon / description_url / tags are optional — omit them until the plugin has them
-      (tags is a JSON string array, e.g. ["mcp","windows"])
+      (tags is a JSON array, e.g. ["mcp","windows"])
 
 this repo, update-registry.yml triggered by repository_dispatch:
   1. patches .claude-plugin/marketplace.json (upsert by plugin name)

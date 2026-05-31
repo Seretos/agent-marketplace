@@ -26,9 +26,14 @@ jobs:
           PLUGIN_ICON:     ${{ github.event.client_payload.icon }}
           # Optional, same gradual-rollout / preserve semantics as icon.
           # description_url: raw link to a longer description.md.
-          # tags: a JSON string array, e.g. ["mcp","windows"].
+          # tags: a JSON array, e.g. ["mcp","windows"].
           PLUGIN_DESCRIPTION_URL: ${{ github.event.client_payload.description_url }}
-          PLUGIN_TAGS:            ${{ github.event.client_payload.tags }}
+          # tags is a structured value (array/object), so it MUST be wrapped in
+          # toJSON(): injecting a raw sequence into a scalar env value fails the
+          # workflow at template-compile time ("A sequence was not expected"),
+          # before any step runs. toJSON() serializes it to a JSON string the
+          # Python below parses; an omitted field becomes the literal "null".
+          PLUGIN_TAGS:            ${{ toJSON(github.event.client_payload.tags) }}
         run: |
           python3 - <<'EOF'
           import json, os
@@ -47,8 +52,15 @@ jobs:
           icon     = (os.environ.get("PLUGIN_ICON") or "").strip()
           # Same optional / preserve semantics as icon (see below).
           description_url = (os.environ.get("PLUGIN_DESCRIPTION_URL") or "").strip()
+          # PLUGIN_TAGS arrives as JSON text (via toJSON above): an array like
+          # ["mcp"], the literal "null" when the field was omitted, or — to stay
+          # tolerant of an older payload contract — a JSON-encoded string. Parse
+          # once, unwrap a double-encoded string, and keep it only if it's a list.
           raw_tags = (os.environ.get("PLUGIN_TAGS") or "").strip()
-          tags     = json.loads(raw_tags) if raw_tags else []
+          parsed_tags = json.loads(raw_tags) if raw_tags else None
+          if isinstance(parsed_tags, str):
+              parsed_tags = json.loads(parsed_tags)
+          tags = parsed_tags if isinstance(parsed_tags, list) else []
 
           def find(plugins, name):
               for p in plugins:
