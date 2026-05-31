@@ -77,11 +77,16 @@
       "source": {
         "source": "github",
         "repo": "Seretos/agent-mcp-tester",
-        "ref": "agent-mcp-tester--v0.0.9"
+        "ref": "agent-mcp-tester--v0.1.0"
       },
       "category": "mcp",
-      "version": "0.0.9",
-      "icon": "https://raw.githubusercontent.com/Seretos/agent-mcp-tester/agent-mcp-tester--v0.0.9/assets/icon.png"
+      "version": "0.1.0",
+      "icon": "https://raw.githubusercontent.com/Seretos/agent-mcp-tester/agent-mcp-tester--v0.1.0/assets/icon.png",
+      "description_url": "https://raw.githubusercontent.com/Seretos/agent-mcp-tester/agent-mcp-tester--v0.1.0/description.md",
+      "tags": [
+        "e2e-test",
+        "replay"
+      ]
     },
     {
       "name": "agent-ecosystem-ticket-router",
