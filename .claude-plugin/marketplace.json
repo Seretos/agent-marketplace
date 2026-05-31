@@ -89,11 +89,16 @@
       "source": {
         "source": "github",
         "repo": "Seretos/agent-ecosystem-ticket-router",
-        "ref": "agent-ecosystem-ticket-router--v0.0.3"
+        "ref": "agent-ecosystem-ticket-router--v0.0.4"
       },
       "category": "skill",
-      "version": "0.0.3",
-      "icon": "https://raw.githubusercontent.com/Seretos/agent-ecosystem-ticket-router/agent-ecosystem-ticket-router--v0.0.3/assets/icon.png"
+      "version": "0.0.4",
+      "icon": "https://raw.githubusercontent.com/Seretos/agent-ecosystem-ticket-router/agent-ecosystem-ticket-router--v0.0.4/assets/icon.png",
+      "description_url": "https://raw.githubusercontent.com/Seretos/agent-ecosystem-ticket-router/agent-ecosystem-ticket-router--v0.0.4/description.md",
+      "tags": [
+        "organisation",
+        "ticket"
+      ]
     },
     {
       "name": "agent-serena-wrapper",
