@@ -62,10 +62,16 @@
       "source": {
         "source": "github",
         "repo": "Seretos/agent-worktree",
-        "ref": "agent-worktree--v0.1.0"
+        "ref": "agent-worktree--v0.1.1"
       },
       "category": "mcp",
-      "version": "0.1.0"
+      "version": "0.1.1",
+      "icon": "https://raw.githubusercontent.com/Seretos/agent-worktree/agent-worktree--v0.1.1/assets/icon.png",
+      "description_url": "https://raw.githubusercontent.com/Seretos/agent-worktree/agent-worktree--v0.1.1/description.md",
+      "tags": [
+        "git",
+        "environment"
+      ]
     },
     {
       "name": "agent-python-developer-ticket-workflow",
