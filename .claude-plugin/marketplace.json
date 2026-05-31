@@ -14,10 +14,11 @@
       "source": {
         "source": "github",
         "repo": "Seretos/agent-vdesktop",
-        "ref": "agent-vdesktop--v0.0.7"
+        "ref": "agent-vdesktop--v0.1.0"
       },
       "category": "mcp",
-      "version": "0.0.7"
+      "version": "0.1.0",
+      "icon": "https://raw.githubusercontent.com/Seretos/agent-vdesktop/agent-vdesktop--v0.1.0/assets/icon.png"
     },
     {
       "name": "agent-project-issues",
@@ -25,10 +26,11 @@
       "source": {
         "source": "github",
         "repo": "Seretos/agent-project-issues",
-        "ref": "agent-project-issues--v0.1.2"
+        "ref": "agent-project-issues--v0.1.4"
       },
       "category": "mcp",
-      "version": "0.1.2"
+      "version": "0.1.4",
+      "icon": "https://raw.githubusercontent.com/Seretos/agent-project-issues/agent-project-issues--v0.1.4/assets/icon.png"
     },
     {
       "name": "agent-vdesktop-skill",
@@ -36,10 +38,11 @@
       "source": {
         "source": "github",
         "repo": "Seretos/agent-vdesktop-skill",
-        "ref": "agent-vdesktop-skill--v0.0.5"
+        "ref": "agent-vdesktop-skill--v0.0.6"
       },
       "category": "skill",
-      "version": "0.0.5"
+      "version": "0.0.6",
+      "icon": "https://raw.githubusercontent.com/Seretos/agent-vdesktop-skill/agent-vdesktop-skill--v0.0.6/assets/icon.png"
     },
     {
       "name": "agent-worktree",
@@ -47,10 +50,10 @@
       "source": {
         "source": "github",
         "repo": "Seretos/agent-worktree",
-        "ref": "agent-worktree--v0.0.7"
+        "ref": "agent-worktree--v0.1.0"
       },
       "category": "mcp",
-      "version": "0.0.7"
+      "version": "0.1.0"
     },
     {
       "name": "agent-python-developer-ticket-workflow",
@@ -58,10 +61,47 @@
       "source": {
         "source": "github",
         "repo": "Seretos/agent-python-developer-ticket-workflow",
-        "ref": "agent-python-developer-ticket-workflow--v0.0.2"
+        "ref": "agent-python-developer-ticket-workflow--v0.0.6"
       },
       "category": "skill",
-      "version": "0.0.2"
+      "version": "0.0.6",
+      "icon": "https://raw.githubusercontent.com/Seretos/agent-python-developer-ticket-workflow/agent-python-developer-ticket-workflow--v0.0.6/assets/icon.png"
+    },
+    {
+      "name": "agent-mcp-tester",
+      "description": "E2E-tests MCP servers: LLM-driven sweeps that record repeatable test suites, plus a deterministic runner that replays them with zero LLM tokens.",
+      "source": {
+        "source": "github",
+        "repo": "Seretos/agent-mcp-tester",
+        "ref": "agent-mcp-tester--v0.0.9"
+      },
+      "category": "mcp",
+      "version": "0.0.9",
+      "icon": "https://raw.githubusercontent.com/Seretos/agent-mcp-tester/agent-mcp-tester--v0.0.9/assets/icon.png"
+    },
+    {
+      "name": "agent-ecosystem-ticket-router",
+      "description": "Triage, route, and close tickets across a project ecosystem using MCP tool descriptions",
+      "source": {
+        "source": "github",
+        "repo": "Seretos/agent-ecosystem-ticket-router",
+        "ref": "agent-ecosystem-ticket-router--v0.0.3"
+      },
+      "category": "skill",
+      "version": "0.0.3",
+      "icon": "https://raw.githubusercontent.com/Seretos/agent-ecosystem-ticket-router/agent-ecosystem-ticket-router--v0.0.3/assets/icon.png"
+    },
+    {
+      "name": "agent-serena-wrapper",
+      "description": "Pairs the external Serena MCP server with a skill so Claude works with code through token-efficient semantic operations instead of reading whole files.",
+      "source": {
+        "source": "github",
+        "repo": "Seretos/agent-serena-wrapper",
+        "ref": "agent-serena-wrapper--v0.0.3"
+      },
+      "category": "skill",
+      "version": "0.0.3",
+      "icon": "https://raw.githubusercontent.com/Seretos/agent-serena-wrapper/agent-serena-wrapper--v0.0.3/assets/icon.png"
     }
   ]
 }
