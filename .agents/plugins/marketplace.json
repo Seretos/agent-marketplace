@@ -94,6 +94,19 @@
         "authentication": "ON_INSTALL"
       },
       "category": "Productivity"
+    },
+    {
+      "name": "agent-autonomous-developer",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/Seretos/agent-autonomous-developer.git",
+        "ref": "agent-autonomous-developer--v0.0.8"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
     }
   ]
 }
