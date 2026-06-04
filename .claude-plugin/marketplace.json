@@ -129,12 +129,12 @@
       "source": {
         "source": "github",
         "repo": "Seretos/agent-autonomous-developer",
-        "ref": "agent-autonomous-developer--v0.0.8"
+        "ref": "agent-autonomous-developer--v0.1.0"
       },
       "category": "skill",
-      "version": "0.0.8",
-      "icon": "https://raw.githubusercontent.com/Seretos/agent-autonomous-developer/agent-autonomous-developer--v0.0.8/assets/icon.png",
-      "description_url": "https://raw.githubusercontent.com/Seretos/agent-autonomous-developer/agent-autonomous-developer--v0.0.8/description.md",
+      "version": "0.1.0",
+      "icon": "https://raw.githubusercontent.com/Seretos/agent-autonomous-developer/agent-autonomous-developer--v0.1.0/assets/icon.png",
+      "description_url": "https://raw.githubusercontent.com/Seretos/agent-autonomous-developer/agent-autonomous-developer--v0.1.0/description.md",
       "tags": [
         "git",
         "organisation",
