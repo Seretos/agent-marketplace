@@ -141,6 +141,19 @@
         "ticket",
         "automation"
       ]
+    },
+    {
+      "name": "agent-unity-wrapper",
+      "description": "Pairs the external Unity MCP server with a skill so Claude can drive the Unity editor - inspecting scenes, GameObjects, and assets - through structured MCP operations instead of guessing project state.",
+      "source": {
+        "source": "github",
+        "repo": "Seretos/agent-unity-wrapper",
+        "ref": "agent-unity-wrapper--v0.0.1"
+      },
+      "category": "skill",
+      "version": "0.0.1",
+      "icon": "https://raw.githubusercontent.com/Seretos/agent-unity-wrapper/agent-unity-wrapper--v0.0.1/assets/icon.png",
+      "description_url": "https://raw.githubusercontent.com/Seretos/agent-unity-wrapper/agent-unity-wrapper--v0.0.1/description.md"
     }
   ]
 }
