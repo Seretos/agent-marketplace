@@ -1350,6 +1350,17 @@
       .join(' ');
   }
 
+  // Heading variant of prettifyName: drops a leading "agent-" prefix so the
+  // displayed title omits the redundant "Agent" word, e.g. "agent-vdesktop"
+  // → "VDesktop", "agent-project-issues" → "Project Issues". The internal
+  // plugin name (p.name) stays "agent-*" — only the heading text changes.
+  // Works generically for any current/future agent-* plugin; names without
+  // the prefix are returned untouched.
+  function prettifyTitle(raw) {
+    const stripped = String(raw).replace(/^agent-/i, '');
+    return prettifyName(stripped || raw);
+  }
+
   // Extract version from ref like "agent-vdesktop--v0.0.7" → "v0.0.7"
   function extractVersion(ref) {
     if (!ref) return null;
@@ -1578,6 +1589,7 @@
   // ── Render ───────────────────────────────────────────────────
   function renderRow(p, ctx, type) {
     const pretty    = prettifyName(p.name);
+    const title     = prettifyTitle(p.name);
     const version   = p.version || extractVersion(p.source && p.source.ref);
     const repo      = p.source && p.source.repo;       // e.g. "Seretos/agent-vdesktop"
     const sourceUrl = repo ? `https://github.com/${repo}` : (p.source && p.source.url);
@@ -1632,7 +1644,7 @@
           <div class="row-icon">${iconHtml}</div>
           <div class="row-main">
             <div class="row-titleline">
-              <h2 class="row-title">${escapeHtml(pretty)}</h2>
+              <h2 class="row-title">${escapeHtml(title)}</h2>
               ${beta ? '<span class="badge-beta">Beta</span>' : ''}
             </div>
             <p class="row-desc">${escapeHtml(desc)}</p>
