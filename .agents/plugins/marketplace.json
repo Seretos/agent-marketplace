@@ -113,7 +113,7 @@
       "source": {
         "source": "url",
         "url": "https://github.com/Seretos/agent-unity-wrapper.git",
-        "ref": "agent-unity-wrapper--v0.0.2"
+        "ref": "agent-unity-wrapper--v0.0.3"
       },
       "policy": {
         "installation": "AVAILABLE",
