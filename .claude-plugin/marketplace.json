@@ -14,11 +14,16 @@
       "source": {
         "source": "github",
         "repo": "Seretos/agent-vdesktop",
-        "ref": "agent-vdesktop--v0.1.0"
+        "ref": "agent-vdesktop--v0.1.2"
       },
       "category": "mcp",
-      "version": "0.1.0",
-      "icon": "https://raw.githubusercontent.com/Seretos/agent-vdesktop/agent-vdesktop--v0.1.0/assets/icon.png"
+      "version": "0.1.2",
+      "icon": "https://raw.githubusercontent.com/Seretos/agent-vdesktop/agent-vdesktop--v0.1.2/assets/icon.png",
+      "description_url": "https://raw.githubusercontent.com/Seretos/agent-vdesktop/agent-vdesktop--v0.1.2/description.md",
+      "tags": [
+        "visual",
+        "environment"
+      ]
     },
     {
       "name": "agent-project-issues",
