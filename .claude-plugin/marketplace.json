@@ -62,12 +62,12 @@
       "source": {
         "source": "github",
         "repo": "Seretos/agent-worktree",
-        "ref": "agent-worktree--v0.1.1"
+        "ref": "agent-worktree--v0.1.2"
       },
       "category": "mcp",
-      "version": "0.1.1",
-      "icon": "https://raw.githubusercontent.com/Seretos/agent-worktree/agent-worktree--v0.1.1/assets/icon.png",
-      "description_url": "https://raw.githubusercontent.com/Seretos/agent-worktree/agent-worktree--v0.1.1/description.md",
+      "version": "0.1.2",
+      "icon": "https://raw.githubusercontent.com/Seretos/agent-worktree/agent-worktree--v0.1.2/assets/icon.png",
+      "description_url": "https://raw.githubusercontent.com/Seretos/agent-worktree/agent-worktree--v0.1.2/description.md",
       "tags": [
         "git",
         "environment"
