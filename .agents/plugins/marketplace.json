@@ -120,6 +120,19 @@
         "authentication": "ON_INSTALL"
       },
       "category": "Productivity"
+    },
+    {
+      "name": "agent-batch-reviewer",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/Seretos/agent-batch-reviewer.git",
+        "ref": "agent-batch-reviewer--v0.0.1"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
     }
   ]
 }
