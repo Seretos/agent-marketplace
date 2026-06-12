@@ -172,6 +172,23 @@
       "version": "0.0.1",
       "icon": "https://raw.githubusercontent.com/Seretos/agent-batch-reviewer/agent-batch-reviewer--v0.0.1/assets/icon.png",
       "description_url": "https://raw.githubusercontent.com/Seretos/agent-batch-reviewer/agent-batch-reviewer--v0.0.1/description.md"
+    },
+    {
+      "name": "agent-claude-memory-gatekeeper",
+      "description": "Intercepts Claude's memory-save process and redirects new memories into a review folder, so you can approve them before they are persisted and shared.",
+      "source": {
+        "source": "github",
+        "repo": "Seretos/agent-claude-memory-gatekeeper",
+        "ref": "agent-claude-memory-gatekeeper--v0.0.1"
+      },
+      "category": "hook",
+      "version": "0.0.1",
+      "icon": "https://raw.githubusercontent.com/Seretos/agent-claude-memory-gatekeeper/agent-claude-memory-gatekeeper--v0.0.1/assets/icon.png",
+      "description_url": "https://raw.githubusercontent.com/Seretos/agent-claude-memory-gatekeeper/agent-claude-memory-gatekeeper--v0.0.1/description.md",
+      "tags": [
+        "claude",
+        "memory"
+      ]
     }
   ]
 }
