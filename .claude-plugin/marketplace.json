@@ -173,6 +173,19 @@
         "claude",
         "memory"
       ]
+    },
+    {
+      "name": "agent-chrome-wrapper",
+      "description": "Provides an MCP that gives agents access to Chrome, starting a separate Chrome instance for each session.",
+      "source": {
+        "source": "github",
+        "repo": "Seretos/agent-chrome-wrapper",
+        "ref": "agent-chrome-wrapper--v0.0.3"
+      },
+      "category": "mcp",
+      "version": "0.0.3",
+      "icon": "https://raw.githubusercontent.com/Seretos/agent-chrome-wrapper/agent-chrome-wrapper--v0.0.3/assets/icon.png",
+      "description_url": "https://raw.githubusercontent.com/Seretos/agent-chrome-wrapper/agent-chrome-wrapper--v0.0.3/description.md"
     }
   ]
 }
