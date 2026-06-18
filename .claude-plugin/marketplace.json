@@ -114,16 +114,16 @@
     },
     {
       "name": "agent-autonomous-developer",
-      "description": "Turns agent-project-issues tickets into draft pull requests for projects in any language (stack auto-detected). Ships two skills \u2014 orchestrate-tickets (dispatches conflict-free parallel ticket work across git worktrees and launches one background Claude session per ticket) and process-ticket (an end-to-end context\u2192plan\u2192code\u2192review\u2192PR pipeline) \u2014 backed by five subagents. Drives the agent-project-issues and agent-worktree MCPs.",
+      "description": "Turns agent-project-issues tickets into draft pull requests for projects in any language (stack auto-detected). Ships three skills \u2014 dispatch (model-facing lane-aware entry point), orchestrate-tickets (fleet orchestrator, main-checkout lane), and process-ticket (end-to-end ticket pipeline, worktree lane) \u2014 backed by five subagents. Drives the agent-project-issues and agent-worktree MCPs.",
       "source": {
         "source": "github",
         "repo": "Seretos/agent-autonomous-developer",
-        "ref": "agent-autonomous-developer--v0.1.4"
+        "ref": "agent-autonomous-developer--v0.1.5"
       },
       "category": "skill",
-      "version": "0.1.4",
-      "icon": "https://raw.githubusercontent.com/Seretos/agent-autonomous-developer/agent-autonomous-developer--v0.1.4/assets/icon.png",
-      "description_url": "https://raw.githubusercontent.com/Seretos/agent-autonomous-developer/agent-autonomous-developer--v0.1.4/description.md",
+      "version": "0.1.5",
+      "icon": "https://raw.githubusercontent.com/Seretos/agent-autonomous-developer/agent-autonomous-developer--v0.1.5/assets/icon.png",
+      "description_url": "https://raw.githubusercontent.com/Seretos/agent-autonomous-developer/agent-autonomous-developer--v0.1.5/description.md",
       "tags": [
         "git",
         "organisation",
