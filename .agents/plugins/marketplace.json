@@ -87,7 +87,7 @@
       "source": {
         "source": "url",
         "url": "https://github.com/Seretos/agent-autonomous-developer.git",
-        "ref": "agent-autonomous-developer--v0.1.6"
+        "ref": "agent-autonomous-developer--v0.1.7"
       },
       "policy": {
         "installation": "AVAILABLE",
