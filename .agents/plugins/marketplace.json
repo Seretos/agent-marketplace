@@ -22,7 +22,7 @@
       "source": {
         "source": "url",
         "url": "https://github.com/Seretos/agent-project-issues.git",
-        "ref": "agent-project-issues--v0.1.10"
+        "ref": "agent-project-issues--v0.1.11"
       },
       "policy": {
         "installation": "AVAILABLE",
