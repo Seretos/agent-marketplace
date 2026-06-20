@@ -35,7 +35,7 @@
       "source": {
         "source": "url",
         "url": "https://github.com/Seretos/agent-worktree.git",
-        "ref": "agent-worktree--v0.1.10"
+        "ref": "agent-worktree--v0.1.11"
       },
       "policy": {
         "installation": "AVAILABLE",
