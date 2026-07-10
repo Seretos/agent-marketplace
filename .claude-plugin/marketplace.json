@@ -137,12 +137,12 @@
       "source": {
         "source": "github",
         "repo": "Seretos/agent-unity-wrapper",
-        "ref": "agent-unity-wrapper--v0.0.9"
+        "ref": "agent-unity-wrapper--v0.0.11"
       },
       "category": "skill",
-      "version": "0.0.9",
-      "icon": "https://raw.githubusercontent.com/Seretos/agent-unity-wrapper/agent-unity-wrapper--v0.0.9/assets/icon.png",
-      "description_url": "https://raw.githubusercontent.com/Seretos/agent-unity-wrapper/agent-unity-wrapper--v0.0.9/description.md"
+      "version": "0.0.11",
+      "icon": "https://raw.githubusercontent.com/Seretos/agent-unity-wrapper/agent-unity-wrapper--v0.0.11/assets/icon.png",
+      "description_url": "https://raw.githubusercontent.com/Seretos/agent-unity-wrapper/agent-unity-wrapper--v0.0.11/description.md"
     },
     {
       "name": "agent-batch-reviewer",
