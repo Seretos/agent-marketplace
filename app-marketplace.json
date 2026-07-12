@@ -12,13 +12,13 @@
       "name": "workboard",
       "description": "A pinnable desktop board that surfaces your assigned tickets and spins up per-ticket worktrees, virtual desktops, and dev environments to parallelize agent-driven work.",
       "category": "app",
-      "version": "0.1.8",
-      "description_url": "https://raw.githubusercontent.com/Seretos/workboard/workboard--v0.1.8/description.md",
-      "icon": "https://raw.githubusercontent.com/Seretos/workboard/workboard--v0.1.8/assets/icon.png",
+      "version": "0.1.16",
+      "description_url": "https://raw.githubusercontent.com/Seretos/workboard/workboard--v0.1.16/description.md",
+      "icon": "https://raw.githubusercontent.com/Seretos/workboard/workboard--v0.1.16/assets/icon.png",
       "downloads": {
-        "linux": "https://github.com/Seretos/workboard/releases/download/workboard--v0.1.8/workboard-0.1.8-linux.AppImage",
-        "macos": "https://github.com/Seretos/workboard/releases/download/workboard--v0.1.8/workboard-0.1.8-mac.dmg",
-        "windows": "https://github.com/Seretos/workboard/releases/download/workboard--v0.1.8/workboard-0.1.8-win.exe"
+        "linux": "https://github.com/Seretos/workboard/releases/download/workboard--v0.1.16/workboard-0.1.16-linux.AppImage",
+        "macos": "https://github.com/Seretos/workboard/releases/download/workboard--v0.1.16/workboard-0.1.16-mac.dmg",
+        "windows": "https://github.com/Seretos/workboard/releases/download/workboard--v0.1.16/workboard-0.1.16-win.exe"
       }
     }
   ]
