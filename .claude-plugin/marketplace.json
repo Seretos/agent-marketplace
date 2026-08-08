@@ -193,12 +193,12 @@
       "source": {
         "source": "github",
         "repo": "Seretos/agent-comfy",
-        "ref": "agent-comfy--v0.0.5"
+        "ref": "agent-comfy--v0.0.6"
       },
       "category": "mcp",
-      "version": "0.0.5",
-      "icon": "https://raw.githubusercontent.com/Seretos/agent-comfy/agent-comfy--v0.0.5/assets/icon.png",
-      "description_url": "https://raw.githubusercontent.com/Seretos/agent-comfy/agent-comfy--v0.0.5/description.md"
+      "version": "0.0.6",
+      "icon": "https://raw.githubusercontent.com/Seretos/agent-comfy/agent-comfy--v0.0.6/assets/icon.png",
+      "description_url": "https://raw.githubusercontent.com/Seretos/agent-comfy/agent-comfy--v0.0.6/description.md"
     },
     {
       "name": "agent-blender-wrapper",
