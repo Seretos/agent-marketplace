@@ -185,6 +185,19 @@
         "authentication": "ON_INSTALL"
       },
       "category": "Productivity"
+    },
+    {
+      "name": "agent-ticket-orchestrator",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/Seretos/agent-ticket-orchestrator.git",
+        "ref": "agent-ticket-orchestrator--v0.1.0"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
     }
   ]
 }
