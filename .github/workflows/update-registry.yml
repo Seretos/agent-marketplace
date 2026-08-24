@@ -137,6 +137,95 @@ jobs:
               f.write("\n")
           EOF
 
+      - name: Build PR body
+        env:
+          PLUGIN_NAME:    ${{ github.event.client_payload.name }}
+          PLUGIN_VERSION: ${{ github.event.client_payload.version }}
+          # Optional. Free-form markdown release notes from the plugin's release
+          # pipeline (normally the body of
+          # `gh api repos/{owner}/{repo}/releases/generate-notes`). Rendered into
+          # the PR body only — it is never written to either registry file.
+          #
+          # Wrapped in toJSON() for the same reason as PLUGIN_TAGS above, and it
+          # matters more here: the plugin repos implement the sender
+          # independently, so one that emits a JSON array of lines instead of a
+          # string would fail this workflow at template-compile time ("A sequence
+          # was not expected") before any step runs — silently dropping every
+          # release, the exact regression 89aa850 fixed. toJSON() also guarantees
+          # one scalar value; Python reads it from the environment, so backticks,
+          # $, quotes and stray EOF lines in the markdown never reach the shell.
+          PLUGIN_CHANGELOG: ${{ toJSON(github.event.client_payload.changelog) }}
+        run: |
+          python3 - <<'EOF'
+          import json, os
+
+          name    = os.environ["PLUGIN_NAME"]
+          version = os.environ["PLUGIN_VERSION"]
+
+          # PLUGIN_CHANGELOG arrives as JSON text (via toJSON above): normally a
+          # JSON string, the literal "null" when the field was omitted, or a JSON
+          # array of lines. Decode once and normalise to plain text. Unlike
+          # PLUGIN_TAGS we deliberately do NOT decode a string result a second
+          # time — real changelog markdown can itself look like a JSON literal,
+          # and double-decoding would corrupt it or raise.
+          raw = os.environ.get("PLUGIN_CHANGELOG") or ""
+          try:
+              parsed = json.loads(raw) if raw.strip() else None
+          except ValueError:
+              parsed = raw  # not JSON at all — treat the raw value as the text
+          if isinstance(parsed, list):
+              parsed = "\n".join(str(item) for item in parsed)
+          changelog = parsed if isinstance(parsed, str) else ""
+          changelog = changelog.replace("\r\n", "\n").replace("\r", "\n").strip()
+
+          # head/tail must stay byte-identical to the inline --body string this
+          # step replaces, so a payload without a changelog produces exactly the
+          # PR body we have always produced.
+          head = (
+              f"Automated registry update triggered by `{name}` release pipeline.\n"
+              f"\n"
+              f"**Plugin:** `{name}`\n"
+              f"**Version:** `{version}`\n"
+          )
+          tail = "\nReview `.claude-plugin/marketplace.json` and merge to publish the entry to the registry."
+
+          def render(cl):
+              return head + (f"\n## Changelog\n\n{cl}\n" if cl else "") + tail
+
+          # GitHub rejects a PR body over 65536 characters. Measure conservatively
+          # — the API may store the body with CRLF line endings, which costs one
+          # extra character per line — and trim only the changelog, on a line
+          # boundary, leaving a visible notice.
+          LIMIT  = 65536
+          MARGIN = 512
+          NOTICE = "\n\n_Changelog truncated — the full release notes exceed GitHub's PR body limit. See the plugin's release page._"
+
+          def wire_len(s):
+              return len(s) + s.count("\n")
+
+          if changelog:
+              budget = LIMIT - MARGIN - wire_len(render("")) - wire_len(NOTICE)
+              if wire_len(changelog) > budget:
+                  kept, used = [], 0
+                  for line in changelog.split("\n"):
+                      cost = len(line) + 2  # line + CRLF, worst case
+                      if used + cost > budget:
+                          break
+                      kept.append(line)
+                      used += cost
+                  changelog = ("\n".join(kept).rstrip() + NOTICE) if kept else NOTICE.strip()
+
+          body = render(changelog)
+
+          path = os.path.join(os.environ.get("RUNNER_TEMP") or "/tmp", "pr-body.md")
+          # No trailing newline (otherwise every future body would drift one byte
+          # from the historical one), newline="\n" so a local Windows run produces
+          # identical bytes to the runner.
+          with open(path, "w", encoding="utf-8", newline="\n") as f:
+              f.write(body)
+          print(f"PR body: {len(body)} chars, changelog: {'yes' if changelog else 'no'} -> {path}")
+          EOF
+
       - name: Commit to feature branch and open PR
         env:
           GH_TOKEN:       ${{ secrets.GITHUB_TOKEN }}
@@ -144,6 +233,10 @@ jobs:
           PLUGIN_VERSION: ${{ github.event.client_payload.version }}
         run: |
           BRANCH="plugin-update/${PLUGIN_NAME}-v${PLUGIN_VERSION}"
+          # Written by the "Build PR body" step. Passed as a file because the
+          # changelog is multi-line markdown that cannot live in an inline
+          # --body argument and must never be shell-interpolated.
+          BODY_FILE="${RUNNER_TEMP:-/tmp}/pr-body.md"
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git checkout -b "$BRANCH"
@@ -162,12 +255,7 @@ jobs:
           else
             gh pr create \
               --title "plugin: ${PLUGIN_NAME} v${PLUGIN_VERSION}" \
-              --body "Automated registry update triggered by \`${PLUGIN_NAME}\` release pipeline.
-
-          **Plugin:** \`${PLUGIN_NAME}\`
-          **Version:** \`${PLUGIN_VERSION}\`
-
-          Review \`.claude-plugin/marketplace.json\` and merge to publish the entry to the registry." \
+              --body-file "$BODY_FILE" \
               --base main \
               --head "$BRANCH"
           fi

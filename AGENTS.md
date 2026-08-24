@@ -63,22 +63,34 @@ Two more optional, catalog-only fields that follow the **exact same rules as `ic
 - `description_url` — a raw link to a longer-form `description.md` shipped on the plugin's `release` branch at the tagged commit (e.g. `https://raw.githubusercontent.com/${repo}/${ref}/description.md`). The field name is the same in the payload and the registry.
 - `tags` — a JSON array of strings (e.g. `["mcp","windows"]`). The dispatch payload carries it as a real JSON array; because it is a structured (non-scalar) value, the dispatcher reads it through `toJSON(...)` before parsing — passing it to a scalar env value directly fails the workflow at template-compile time (`A sequence was not expected`). The dispatcher also tolerates a legacy JSON-encoded **string** form. An empty/omitted value leaves the key out and preserves any existing tags.
 
+### `changelog` (optional, PR-body only)
+
+`changelog` is the one optional payload field that is **not** a registry field. It carries free-form markdown release notes (normally the body of `gh api repos/{owner}/{repo}/releases/generate-notes`) produced by the plugin's (or app's) `release.yml`. The update workflow renders it into the **pull-request body** under a `## Changelog` heading and then discards it — nothing is written to `.claude-plugin/marketplace.json`, `.agents/plugins/marketplace.json`, or `app-marketplace.json`, so there is no preserve-on-omit rule and a re-release can never "lose" a changelog. It also never causes a PR on its own — the `git diff --cached --quiet` gate still decides that.
+
+- Absent, empty, or whitespace-only → the PR body is byte-identical to the pre-changelog one (no stray `## Changelog` heading).
+- Like `tags` / `downloads`, it is read through `toJSON(...)`. This matters more here: each plugin/app repo implements the sender itself, and one that emits a JSON **array of lines** rather than a string would fail the workflow at template-compile time and silently drop the release. The dispatcher accepts a string or an array of lines and ignores any other shape.
+- It is passed to `gh pr create` with `--body-file`, built by a dedicated "Build PR body" Python step that reads it from the environment — arbitrary markdown (backticks, `$`, quotes) is never interpolated by the shell.
+- Truncated on a line boundary with a visible notice if the body would exceed GitHub's 65536-character PR body limit.
+- Rendered verbatim, so `@mentions` and bare `#123` references inside it become real mentions and cross-links **in this repo's numbering**. Prefer `generate-notes` output (which emits full PR URLs) over `git log --oneline` subjects like `fix: x (#12)`.
+
 ## How entries get added
 
 ```
 plugin repo (e.g. agent-vdesktop)
   release.yml after a successful build:
     POST /repos/Seretos/agent-marketplace/dispatches
-    client_payload: { name, repo, version, category, description, icon?, description_url?, tags? }
-      icon / description_url / tags are optional — omit them until the plugin has them
-      (tags is a JSON array, e.g. ["mcp","windows"])
+    client_payload: { name, repo, version, category, description, icon?, description_url?, tags?, changelog? }
+      icon / description_url / tags / changelog are optional — omit them until the plugin has them
+      (tags is a JSON array, e.g. ["mcp","windows"]; changelog is markdown release notes,
+       rendered in the PR body only and never stored in the registry)
 
 this repo, update-registry.yml triggered by repository_dispatch:
   1. patches .claude-plugin/marketplace.json (upsert by plugin name)
      — builds the source object from repo + version
        (ref defaults to v{version}, overridable via client_payload.ref)
   2. force-pushes branch  plugin-update/{name}-v{version}
-  3. opens PR if one isn't already open
+  3. opens PR if one isn't already open — the body carries a `## Changelog`
+     section when the payload included one
 
 human review + merge → entry is live
 ```
@@ -113,22 +125,26 @@ app repo
   release.yml after a successful build:
     POST /repos/Seretos/agent-marketplace/dispatches
     event_type: app-release
-    client_payload: { name, repo, version, category, description, downloads, icon?, description_url? }
+    client_payload: { name, repo, version, category, description, downloads, icon?, description_url?, changelog? }
       downloads is a JSON object: { "windows": url, "macos": url, "linux": url }
+      changelog is markdown release notes, rendered in the PR body only and never stored in the registry
 
 this repo, update-app-registry.yml triggered by repository_dispatch:
   1. patches app-marketplace.json (upsert by app name)
   2. force-pushes branch  app-update/{name}-v{version}
-  3. opens PR if one isn't already open
+  3. opens PR if one isn't already open — the body carries a `## Changelog`
+     section when the payload included one
 ```
 
 The app flow is deliberately separate from the plugin flow (own `event_type`, own workflow, own registry file) so the two never interfere. There is no Codex app registry.
 
 ## Cross-repo coupling
 
-When the marketplace.json schema or dispatch payload changes, **every** plugin repo's `release.yml` and `dispatch.yml` need a matching update — the payload contract (`name`, `repo`, `version`, `category`, `description`, optional `icon`, `description_url`, `tags`) is shared. The plugin sends raw fields; this repo synthesizes the `source` object.
+When the marketplace.json schema or dispatch payload changes, **every** plugin repo's `release.yml` and `dispatch.yml` need a matching update — the payload contract (`name`, `repo`, `version`, `category`, `description`, optional `icon`, `description_url`, `tags`, `changelog`) is shared. The plugin sends raw fields; this repo synthesizes the `source` object.
 
 `icon`, `description_url` and `tags` are the **optional** fields in the contract: a plugin that doesn't send one loses nothing (the dispatcher preserves any existing value), so plugins can be migrated one at a time without coordinating a flag-day update across all repos.
+
+`changelog` is optional in the same one-at-a-time way, but it is PR-body-only (see above): a plugin that doesn't send one simply gets the pre-changelog PR body — there is nothing for the dispatcher to preserve or lose.
 
 ## Things that turned out NOT to be needed
 
@@ -145,3 +161,4 @@ When the marketplace.json schema or dispatch payload changes, **every** plugin r
 - Force-push the plugin-update branch on re-runs (idempotent).
 - Skip `gh pr create` if a PR for the branch already exists; force-push refreshes its head.
 - Don't push direct to main from workflows — always go via PR for the human review gate.
+- Build PR bodies in a Python step and pass them with `gh pr create --body-file` — never inline payload text (e.g. a changelog) into a shell argument.
