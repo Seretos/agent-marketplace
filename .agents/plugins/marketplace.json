@@ -198,6 +198,19 @@
         "authentication": "ON_INSTALL"
       },
       "category": "Productivity"
+    },
+    {
+      "name": "agent-discord-wrapper",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/Seretos/agent-discord-wrapper.git",
+        "ref": "agent-discord-wrapper--v0.0.1"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
     }
   ]
 }
