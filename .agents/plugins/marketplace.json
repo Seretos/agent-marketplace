@@ -191,7 +191,7 @@
       "source": {
         "source": "url",
         "url": "https://github.com/Seretos/agent-ticket-orchestrator.git",
-        "ref": "agent-ticket-orchestrator--v0.1.4"
+        "ref": "agent-ticket-orchestrator--v0.1.5"
       },
       "policy": {
         "installation": "AVAILABLE",
