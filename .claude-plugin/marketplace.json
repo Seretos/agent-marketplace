@@ -31,12 +31,12 @@
       "source": {
         "source": "github",
         "repo": "Seretos/agent-project-issues",
-        "ref": "agent-project-issues--v0.2.6"
+        "ref": "agent-project-issues--v0.3.0"
       },
       "category": "mcp",
-      "version": "0.2.6",
-      "icon": "https://raw.githubusercontent.com/Seretos/agent-project-issues/agent-project-issues--v0.2.6/assets/icon.png",
-      "description_url": "https://raw.githubusercontent.com/Seretos/agent-project-issues/agent-project-issues--v0.2.6/description.md",
+      "version": "0.3.0",
+      "icon": "https://raw.githubusercontent.com/Seretos/agent-project-issues/agent-project-issues--v0.3.0/assets/icon.png",
+      "description_url": "https://raw.githubusercontent.com/Seretos/agent-project-issues/agent-project-issues--v0.3.0/description.md",
       "tags": [
         "git",
         "github",
