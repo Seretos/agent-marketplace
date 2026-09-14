@@ -267,6 +267,19 @@
         "communication",
         "chat"
       ]
+    },
+    {
+      "name": "agent-web-tester",
+      "description": "Assistant for creating E2E web tests: scans pages into a Gherkin step catalog and authors/records scenarios that run deterministically via playwright-bdd in the pipeline.",
+      "source": {
+        "source": "github",
+        "repo": "Seretos/agent-web-tester",
+        "ref": "agent-web-tester--v0.0.1"
+      },
+      "category": "skill",
+      "version": "0.0.1",
+      "icon": "https://raw.githubusercontent.com/Seretos/agent-web-tester/agent-web-tester--v0.0.1/assets/icon.png",
+      "description_url": "https://raw.githubusercontent.com/Seretos/agent-web-tester/agent-web-tester--v0.0.1/description.md"
     }
   ]
 }

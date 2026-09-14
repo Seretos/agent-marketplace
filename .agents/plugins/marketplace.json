@@ -211,6 +211,19 @@
         "authentication": "ON_INSTALL"
       },
       "category": "Productivity"
+    },
+    {
+      "name": "agent-web-tester",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/Seretos/agent-web-tester.git",
+        "ref": "agent-web-tester--v0.0.1"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
     }
   ]
 }
