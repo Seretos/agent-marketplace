@@ -243,12 +243,12 @@
       "source": {
         "source": "github",
         "repo": "Seretos/agent-ticket-orchestrator",
-        "ref": "agent-ticket-orchestrator--v0.1.10"
+        "ref": "agent-ticket-orchestrator--v0.1.11"
       },
       "category": "skill",
-      "version": "0.1.10",
-      "icon": "https://raw.githubusercontent.com/Seretos/agent-ticket-orchestrator/agent-ticket-orchestrator--v0.1.10/assets/icon.png",
-      "description_url": "https://raw.githubusercontent.com/Seretos/agent-ticket-orchestrator/agent-ticket-orchestrator--v0.1.10/description.md"
+      "version": "0.1.11",
+      "icon": "https://raw.githubusercontent.com/Seretos/agent-ticket-orchestrator/agent-ticket-orchestrator--v0.1.11/assets/icon.png",
+      "description_url": "https://raw.githubusercontent.com/Seretos/agent-ticket-orchestrator/agent-ticket-orchestrator--v0.1.11/description.md"
     },
     {
       "name": "agent-discord-wrapper",
